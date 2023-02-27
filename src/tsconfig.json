@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": "",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "mapRoot": "./",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "../dist/out-tsc",
+    "sourceMap": true,
+    "target": "es2020",
+    "allowJs":true,
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": "true"
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

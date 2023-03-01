@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Firestore, collection, doc, collectionData, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { Plans } from 'app/models/plans';
+import { AngularFirestore } from '@angular/fire/compat/firestore'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
 
-  constructor(    private fireservices: Firestore ) {}
+  constructor(    private afs: AngularFirestore) {}
 
     form = new FormGroup({
     $key: new FormControl(null),
@@ -18,18 +18,21 @@ export class MemberService {
     price: new FormControl('',Validators.required)
   });
   
+  addPlans(plan: Plans){
+      plan.id = this.afs.createId()
+      return this.afs.collection('plans').add(plan)
+  }
+
   fetchPlans(){
-      let planRef = collection(this.fireservices, 'plans')
-      return collectionData(planRef, {idField: 'id'})
+      return this.afs.collection('plans').snapshotChanges()
   }
 
   deletePlans(plan:Plans){
-    let plansRef = doc(collection(this.fireservices,`plans/${plan.planId}`))
-    return deleteDoc(plansRef)
+    return this.afs.doc('plans'+plan.id).delete()
   }
 
-  updatePlans(plans: Plans, plan: any){
-    let planRef = doc(this.fireservices, `Plans,${plans.planId}`)
-    return updateDoc(planRef, plan)
+  updatePlans(plans: Plans){
+    this.deletePlans(plans)
+    this.addPlans(plans)  
   }
 }

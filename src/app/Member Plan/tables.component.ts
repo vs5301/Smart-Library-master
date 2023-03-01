@@ -18,17 +18,23 @@ declare interface TableData {
 export class TablesComponent implements OnInit {
     public tableData1: TableData;
     planForm: FormGroup 
-    public editForm =  FormGroup
-    planData: any = [] 
-    planObj: Plans ={
-      planId: '',
+    plansList: Plans[] = []
+    planObj : Plans = {
+      id: '',
       plan: '',
-      bookIssueLimit: 0,
-      bookReturnPeriod: 0,
-      price: 0
+      bookIssueLimit: '',
+      bookReturnPeriod: '',
+      price: ''
     }
+    id: string = ''
+    plan: string = ''
+    bookIssueLimit: string = ''
+    bookReturnPeriod: string = ''
+    price: string = ''
+
     closeResult = '';
     display = "none";
+    editdisplay = "none"
    
 
   constructor( private fb : FormBuilder, 
@@ -43,7 +49,7 @@ export class TablesComponent implements OnInit {
       price:["", Validators.required],
       
     })
-    this.editForm = this.fb.group
+    /*this.editForm = this.fb.group
     ({ 
       planId:[doc(collection(this.firestore, "plans")).id],
       plan:["",Validators.required],
@@ -51,7 +57,7 @@ export class TablesComponent implements OnInit {
       bookReturnPeriod:["", Validators.required ],
       price:["", Validators.required],
       
-    })
+    })*/
    }
 
   submitted: boolean;
@@ -93,22 +99,50 @@ export class TablesComponent implements OnInit {
     this.display = "none";
   }
 
+  addPlan(){
+    if(this.plan == '' || this.bookIssueLimit == '' || this.bookReturnPeriod == '' || this.price == '')
+    alert('Please provide complete input!')
+
+    this.planObj.id = ''
+    this.planObj.plan = this.plan
+    this.planObj.bookIssueLimit = this.bookIssueLimit
+    this.planObj.bookReturnPeriod = this.bookReturnPeriod
+    this.planObj.price = this.price
+
+    this.memberService.addPlans(this.planObj)
+
+    this.planForm.reset
+  }
   getAllPlan(){
-    this.memberService.fetchPlans().subscribe((res:Plans[])=>{
-    console.log(res)
-    this.planData = res
-  })
+    this.memberService.fetchPlans().subscribe(res => {
+      this.plansList = res.map((e:any) => {
+        const data = e.payload.doc.data()
+        data.id = e.payload.doc.id;
+        return data
+      })
+    }, err =>{
+      alert('Eror while fetching plans list')
+    })
+  }
+  
+  updatePlans(){
+      this.planObj.id = this.planForm.value.id
+      this.planObj.plan = this.planForm.value.plan
+      this.planObj.bookIssueLimit = this.planForm.value.bookIssueLimit
+      this.planObj.bookReturnPeriod = this.planForm.value.bookReturnPeriod
+      this.planObj.price = this.planForm.value.price
+
+      this.memberService.updatePlans(this.planObj)     
   }
 
-  deletePlan(plan:Plans){
-    let decision = confirm("Are you sure you want to delete this Plan?")
-    if(decision == true){
-      this.memberService.deletePlans(plan)
-    }
+  deletePlans(plans: Plans){ 
+    if(window.confirm('Are you sure you want to delete '+ plans.plan + '? '))
+    this.memberService.deletePlans(plans)
   }
-
+ 
+  /*
   updatePlan(plan:Plans){
     const (value) = this.editForm
     console.log(value)
-  }
+  }*/
 }

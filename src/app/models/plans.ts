@@ -1,7 +1,7 @@
 export interface Plans{
-    planId:string,
+    id:string,
     plan:string,
-    bookIssueLimit:number,
-    bookReturnPeriod:number,
-    price:number
+    bookIssueLimit:string,
+    bookReturnPeriod:string,
+    price:string
 }

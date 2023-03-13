@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { collection, Firestore, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
+declare interface TableData {
+	headerRow: string[];
+	dataRows: string[][];
+  }
 
 @Component({
   selector: 'app-maps',
@@ -8,31 +17,30 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class MapsComponent implements OnInit {
-	closeResult = '';
+	public tableData1: TableData;
+	userData!: Observable<any>;
 
-  constructor( private modalService: NgbModal ) { }
+	constructor( private firestore: Firestore, )
+		
+		 { this.getData(); }
 
-  ngOnInit() { }
+  ngOnInit() { 
 
-  open(content) {
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
-		);
-	}
+	this.tableData1 = {
+		headerRow: ['USER ID','BOOK ISSUED','AUTHOR','ISSUE DATE','RETURN DATE'],
+		dataRows: [
+		]
+	};
 
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
+  }
+
+  getData() {
+    const collectionInstance = collection(this.firestore,'issued');
+    collectionData(collectionInstance, { idField: 'id' })
+    .subscribe(() => {
+    //  console.log(val);
+    })
+    this.userData = collectionData(collectionInstance, { idField: 'id' });
+  }
 
 }

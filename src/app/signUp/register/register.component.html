@@ -41,73 +41,59 @@
 
 
   <!-- <div class="main-content" > -->
-    <div class="container ">
-        <div class="row h-100 justify-content-center align-items-center ">
-            <div class="col-md-4 max-auto">
-                <div class="card ">
+<div class="main-content">
 
-                    <div class="header">
-                        <h4 class="title">Sign Up</h4>
-                    </div>
-
-                    <div class="content">
-
-                        <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm)">
-                            <div class="row">
-
-                                
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label for="email" class="text-sm">Name</label>
-                                        <input class="form-control" placeholder="eg: abc@example.com" formControlName="name" name="name"
-                                          type="text" required>
-                                    </div>
-                                </div>
-                                
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label for="email" class="text-sm">Email</label>
-                                        <input class="form-control" placeholder="eg: abc@example.com" formControlName="email" name="email"
-                                          type="email" required>
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label for="password" class="text-sm">Password</label>
-                                        <input class="form-control" placeholder="********" formControlName="password" name="password"
-                                          type="password" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p class="alert alert-danger text-center h6 mt-2" *ngIf="errorMsg !== undefined">
-                                {{ errorMsg }}
-                              </p>
-
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Sign up
-                                <span *ngIf="loader">&nbsp;
-                                </span>
-                                 <div *ngIf="loader" class="spinner-border spinner-border-sm text-light" role="status">
-                                 </div>
-                            </button>&nbsp;
-                            <div class="clearfix"></div>
-                            <p class="mt-3 d-flex gap-2">Already have account. <a routerLink="/login" [replaceUrl]="true" class="nav-link p-0 text-primary m-0">Sign In Instead</a></p>
-                        </form>
-
-                    </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="card ">
+          <div class="header">
+            <h4 class="h2 title text-center">Sign Up</h4>
+          </div>
+         <div class="content">
+            <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm)">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="email" class="text-sm">Name</label>
+                    <input class="form-control" placeholder="eg: abc@example.com" formControlName="name" name="name" type="text" required>
+                  </div>
+                </div>                
+              </div>
+             <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="email" class="text-sm">Email</label>
+                  <input class="form-control" placeholder="eg: abc@example.com" formControlName="email" name="email" type="email" required>
                 </div>
+              </div>
+             </div>
+             <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="password" class="text-sm">Password</label>
+                  <input class="form-control" placeholder="********" formControlName="password" name="password" type="password" required>
+                </div>
+              </div>
+             </div>
+              <p class="alert alert-danger text-center h6 mt-2" *ngIf="errorMsg !== undefined">{{ errorMsg }}</p>
+              <button type="submit" class="btn btn-info  pull-right">Sign Up
+                <span *ngIf="loader">&nbsp;
+                </span>
+                 <div *ngIf="loader" class="spinner-border spinner-border-sm text-light" role="status">
+                 </div>
+            </button>
+            <div class="clearfix"></div>
+
+            <div class="header">
+              <h4>
+              <p class="mt-3 d-flex gap-2 text-center">Already have a account.<a routerLink="/login" [replaceUrl]="true" class="nav-link p-0 text-primary m-0">Sign In Instead</a></p></h4>
             </div>
-            
+        </form>                 
+          </div>
         </div>
+      </div>                   
     </div>
-<!-- </div> -->
+  </div>
+</div>
+                        <!-- </div> -->

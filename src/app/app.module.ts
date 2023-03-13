@@ -20,6 +20,10 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { EditPlanComponent } from './edit-plan/edit-plan.component';
 import { MemberService } from './memberService/member.service';
+import { UserBooksComponent } from './user-books/user-books.component';
+
+
+
 
 @NgModule({
   imports: [
@@ -44,6 +48,7 @@ import { MemberService } from './memberService/member.service';
     AdminLayoutComponent,
     AuthLayoutComponent,
     EditPlanComponent,
+    UserBooksComponent,
   
     
   ],

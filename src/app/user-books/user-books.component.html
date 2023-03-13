@@ -1,0 +1,136 @@
+<div class="main-content">
+  
+  <div class="container-fluid">
+      <div class="row">
+      
+      <div class="col-md-13" style="margin-left: 10px; margin-right: 10px;">
+      <div class="card">
+      
+      <div class="row">
+      
+       <div class="col-md-8 text-left">
+        <div class="col-md-4" style="margin-top: 12px; margin-bottom: 1px;">
+          <div class="form-group has-feedback has-search">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+      </div>
+      </div>
+                      
+      <div class="col-md-4 text-right">
+      <div class="header">
+      <!-- <a class="btn btn-dark " style=" color: black; margin-bottom:12px;" (click)="openModal1()" > Add Book </a> -->
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div> 
+
+
+   <div class="container-fluid">
+   <div class="row">
+   
+   <div class="col-md-13" style="margin-left: 10px; margin-right: 10px;">
+   <div class="card">
+   
+   <div class="row">
+   
+   <div class="col-md-8 text-left">
+   <div class="header">
+   <h4 class="title"></h4>
+   </div>
+   </div>
+                           
+   <div class="col-md-4 text-right">
+   <div class="header">
+   <!-- <a class="btn btn-black  btn-fill" style="background-color: black;" (click)="openModal1()" > Add New Book </a> -->
+   </div>
+   </div>
+   </div>
+   
+   <div class="content table-responsive table-full-width">
+   <table class="table table-hover table-striped">
+     <thead>
+      <tr>
+        <th *ngFor="let cell of tableData1.headerRow">{{ cell }}</th>
+        </tr>
+     </thead>
+     <tbody>
+       <tr *ngFor = "let data of userData |async" >
+         <td>{{data.title}}</td>
+         <td>{{data.author}}</td>
+         <td><span class="badge">{{data.tags}}</span></td>
+         <td>{{data.price}}</td>
+         <td>{{data.quantity}}</td>
+         <td>
+          <a class="btn btn-danger btn-xs" (click)="openModal1(data)" > Book Details </a>
+         </td>
+       </tr>
+     </tbody>
+    </table>
+   </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   
+
+
+   <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+    <div class="modal-dialog modal-dialog-centered" role="document">       
+        <div class="modal-content">
+                   <div class="modal-body">
+                    <div class="font-weight-bold">
+                      <h4 class="h3 modal-title text-center ">Add Book</h4>
+                    </div>
+                      <form [formGroup]="addbookform" (ngSubmit)="addData()" (ngSubmit)="addIssueData()"> 
+                        <div class="form-group mb-3">
+                           <div class="row">
+
+                           <div class="col-md-6">
+                              <label class="control-label" for="title">Title</label>
+                               <input type="text" class="form-control" id="title" formControlName="title"> </div> 
+                              
+                             <div class="col-md-6">
+                              <label class="control-label" for="author">Author</label>
+                              <input type="text" class="form-control" id="author" formControlName="author"></div>
+                          </div>
+                       </div>
+                       <!-- <div class="form-group mb-3">
+                        <label class="control-label" for="file">Cover Image</label>
+                        <input type="file" class="inputFile" id="file" (change)="upload($event)" accept="*.png.jpg."
+                        formControlName="file" placeholder="Choose Image File"> 
+                       <button type="button" click="uploadimage()"> Upload</button>
+                       </div> -->
+                        <div class="form-group mb-3">
+                        <div class="row">
+                         <div class="col-md-4">
+                           <label for="quantity" class="form-label m-0 mb-1">Quantity</label>
+                           <input type="text" class="form-control" name="quantity" formControlName="quantity">
+                         </div>
+
+                         <div class="col-md-4">
+                           <label for="price" class="form-label m-0 mb-1">Price</label>
+                           <input type="text" class="form-control" name="price" formControlName="price" placeholder="₹">
+                         </div>
+                       </div>
+                       </div>
+
+                       <div class="form-group mb-3">
+                        <label class="control-label" for="tags">Tags</label>
+                        <input type="text" class="form-control" id="tags" formControlName="tags"> 
+                      </div>
+
+                        <div class="form-group text-right">
+                          
+                          <button type="submit"  class="btn btn-info" value="submit" >ADD BOOK</button> &nbsp;
+                          <button type="button" id="cancel" class="btn btn-danger " (click)="onCloseHandled()">Close</button>
+                        </div>
+                       </form>
+                       </div>
+              </div>
+       </div>
+    </div> 

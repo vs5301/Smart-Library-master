@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { collection, doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Firestore, collection, collectionData, doc, deleteDoc, setDoc} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { MemberService } from 'app/memberService/member.service';
-import { Plans } from 'app/models/plans';
-
 
 declare interface TableData {
-    headerRow: string[];
-    dataRows: string[][];
+  headerRow: string[];
+  dataRows: string[][];
 }
 
 @Component({
@@ -16,133 +15,162 @@ declare interface TableData {
   styleUrls: ['./tables.component.css']
 })
 export class TablesComponent implements OnInit {
-    public tableData1: TableData;
-    planForm: FormGroup 
-    plansList: Plans[] = []
-    planObj : Plans = {
-      id: '',
-      plan: '',
-      bookIssueLimit: '',
-      bookReturnPeriod: '',
-      price: ''
+  public tableData1: TableData;
+  // planForm: FormGroup
+  userData!: Observable<any>;
+  addView = false;
+  updateMode: boolean = false;
+  updatePlanId: any
+  planData: any
+  planList: any
+
+   planForm = new FormGroup(
+    {
+      planId : new FormControl(),
+      plan : new FormControl(),
+      bookIssueLimit : new FormControl(),
+      bookReturnPeriod : new FormControl(),
+      price : new FormControl()
     }
-    id: string = ''
-    plan: string = ''
-    bookIssueLimit: string = ''
-    bookReturnPeriod: string = ''
-    price: string = ''
+  )
 
-    closeResult = '';
-    display = "none";
-    editdisplay = "none"
-   
+  
 
-  constructor( private fb : FormBuilder, 
-               private firestore: Firestore, 
-               private memberService: MemberService) {
-    this.planForm = this.fb.group
-    ({ 
-      planId:[doc(collection(this.firestore, "plans")).id],
-      plan:["",Validators.required],
-      bookIssueLimit:["",Validators.required],
-      bookReturnPeriod:["", Validators.required ],
-      price:["", Validators.required],
-      
-    })
-    /*this.editForm = this.fb.group
-    ({ 
-      planId:[doc(collection(this.firestore, "plans")).id],
-      plan:["",Validators.required],
-      bookIssueLimit:["",Validators.required],
-      bookReturnPeriod:["", Validators.required ],
-      price:["", Validators.required],
-      
-    })*/
-   }
+  // plansList: Plans[] = []
+  // planObj: Plans = {
+  //   id: '',
+  //   plan: '',
+  //   bookIssueLimit: '',
+  //   bookReturnPeriod: '',
+  //   price: ''
+  // }
+  // id: string = ''
+  // plan: string = ''
+  // bookIssueLimit: string = ''
+  // bookReturnPeriod: string = ''
+  // price: string = ''
 
-  submitted: boolean;
-  showSuccessMessage: boolean;
+
+  closeResult = '';
+  display = "none";
+  editdisplay = "none";
+  adddisplay = "none"
+
+  constructor( private fb: FormBuilder,
+               private firestore: Firestore,
+               public ms: MemberService ) {     
+  this.getData();
+ }
+
+ action: String = "";
+
 
   ngOnInit(): void {
-      
-       this.tableData1 = {
-           headerRow: ['PLAN', 'BOOK ISSUE LIMIT',
-                       'BOOK RETURN PERIOD','PRICE', 'ACTION'],
-           dataRows: []
-      };
-      
-      this.getAllPlan()
+
+    this.tableData1 = {
+      headerRow: ['PLAN', 'BOOK ISSUE LIMIT', 'BOOK RETURN PERIOD', 'PRICE', 'ACTION'],
+      dataRows: []
+    };
+
+    this.planForm = this.fb.group
+      ({
+        planId: [doc(collection(this.firestore, "plans")).id],
+        plan: ["", Validators.required],
+        bookIssueLimit: ["", Validators.required],
+        bookReturnPeriod: ["", Validators.required],
+        price: ["", Validators.required],
+
+      })
+   
+        this.addView = true;
+        this.updateMode = true;
   }
 
-  saveUserInFirestore() 
-    {
+  addData() {
     let value = { ...this.planForm.value };
     console.log(value);
-    
+
     let docRef = doc(this.firestore, `plans/${value.planId}`);
     setDoc(docRef, { ...value })
       .then(() => {
         console.log("Saved");
-        this.planForm.reset();
-        
+        this.planForm.reset;
+        this.addonCloseHandled()
       }, (error) => {
         console.log(error);
-        
+
+      })      
+  }
+
+  getData() {
+    const collectionInstance = collection(this.firestore,'plans');
+    collectionData(collectionInstance, { idField: 'id' })
+    .subscribe(() => {
+    //  console.log(val);
+    })
+    this.userData = collectionData(collectionInstance, { idField: 'id' });
+  }
+
+  updateData() {
+    let value: any = { ...this.planForm.value}
+    console.log("Id in update method "+this.updatePlanId)
+    let docRef = doc(this.firestore, `plans/${this.updatePlanId}`)
+    setDoc(docRef,{...value})
+    this.planForm.reset
+    this.editonCloseHandled()
+
+  }
+
+  async updateDataToFb(id: any){
+    console.log("Id passed to update function "+id)
+    this.updatePlanId = id
+  }
+  
+  deleteData(id: string) {
+   const docInstance = doc(this.firestore, 'plans', id);
+   deleteDoc(docInstance)
+   .then(() => {
+     console.log('Data Deleted')
+   })
+  }
+ 
+
+  editopenModal(plan: any = null) {
+    this.editdisplay = "block";
+    this.initialisedPlanForm(plan)
+    console.log("Id in open Modal function "+plan.id)
+  }
+
+  editonCloseHandled() {
+    this.editdisplay = "none";
+  }
+
+  addopenModal() {
+    this.adddisplay = "block";
+  }
+
+  addonCloseHandled() {
+    this.adddisplay = "none";
+  }
+
+  initialisedPlanForm(plan: any = null) {
+    if(plan === null) {
+      this.planForm = this.fb.group({
+        planId: [""],
+        plan: [""],
+        bookIssueLimit: [""],
+        bookReturnPeriod: [""],
+        price: [""]
+      })
+    } else {
+      this.planForm = this.fb.group({
+        planId: [plan.planId],
+        plan: [plan.plan],
+        bookIssueLimit: [plan.bookIssueLimit],
+        bookReturnPeriod: [plan.bookReturnPeriod],
+        price: [plan.price]
       })
     }
 
-
-  openModal() {
-    this.display = "block";
   }
-  onCloseHandled() {
-    this.display = "none";
-  }
-
-  addPlan(){
-    if(this.plan == '' || this.bookIssueLimit == '' || this.bookReturnPeriod == '' || this.price == '')
-    alert('Please provide complete input!')
-
-    this.planObj.id = ''
-    this.planObj.plan = this.plan
-    this.planObj.bookIssueLimit = this.bookIssueLimit
-    this.planObj.bookReturnPeriod = this.bookReturnPeriod
-    this.planObj.price = this.price
-
-    this.memberService.addPlans(this.planObj)
-
-    this.planForm.reset
-  }
-  getAllPlan(){
-    this.memberService.fetchPlans().subscribe(res => {
-      this.plansList = res.map((e:any) => {
-        const data = e.payload.doc.data()
-        data.id = e.payload.doc.id;
-        return data
-      })
-    }, err =>{
-      alert('Eror while fetching plans list')
-    })
-  }
-  
-  updatePlans(){
-      this.planObj.id = this.planForm.value.id
-      this.planObj.plan = this.planForm.value.plan
-      this.planObj.bookIssueLimit = this.planForm.value.bookIssueLimit
-      this.planObj.bookReturnPeriod = this.planForm.value.bookReturnPeriod
-      this.planObj.price = this.planForm.value.price
-
-      this.memberService.updatePlans(this.planObj)     
-  }
-
-  deletePlans(plans: Plans){ 
-    if(window.confirm('Are you sure you want to delete '+ plans.plan + '? '))
-    this.memberService.deletePlans(plans)
-  }
- 
-  /*
-  updatePlan(plan:Plans){
-    const (value) = this.editForm
-    console.log(value)
-  }*/
 }

@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./icons.component.css']
 })
 export class IconsComponent implements OnInit {
+  display = "none";
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+openModal2() {
+    this.display = "block";
+  }
+  onCloseHandled() {
+    this.display = "none";
   }
 
 }

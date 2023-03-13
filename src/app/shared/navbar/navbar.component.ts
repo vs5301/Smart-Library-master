@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../../sidebar/sidebar.component';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
-import { AuthService } from 'app/Service/services/auth.service';
+import {Location} from '@angular/common';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
     // moduleId: module.id,
